@@ -1,0 +1,205 @@
+HRMS Project Documentation
+==========================
+
+Version: 1.0.0
+Last Updated: 2024-08-01
+
+
+Table of Contents
+-----------------
+1.  Introduction
+2.  Technology Stack
+3.  Core Features
+4.  Project Structure
+5.  Getting Started
+    5.1. Prerequisites
+    5.2. Environment Setup
+    5.3. Installation
+    5.4. Running the Application
+6.  Authentication (Clerk)
+7.  Styling (Tailwind CSS & Shadcn/ui)
+8.  State Management (Zustand)
+9.  Forms and Validation (React Hook Form & Zod)
+10. Data Tables (Tanstack Table)
+11. Error Tracking (Sentry)
+12. Deployment
+13. Contributing
+
+
+1. Introduction
+---------------
+This document provides comprehensive documentation for the HRMS (Human Resource Management System) project. This application is a modern, feature-rich admin dashboard built with Next.js 15 and the App Router. It is designed to be a starter template for building complex, scalable web applications with a focus on HR-related tasks.
+
+
+2. Technology Stack
+-------------------
+- **Framework**: Next.js 15 (with App Router)
+- **Language**: TypeScript
+- **Authentication**: Clerk
+- **UI Components**: Shadcn/ui
+- **Styling**: Tailwind CSS v4
+- **State Management**: Zustand
+- **Forms**: React Hook Form
+- **Schema Validation**: Zod
+- **Data Tables**: Tanstack Data Tables, Dice UI Table
+- **Search Params State**: Nuqs
+- **Command Palette**: kbar
+- **Error Tracking**: Sentry
+- **Linting & Formatting**: ESLint, Prettier
+- **Git Hooks**: Husky
+
+
+3. Core Features
+----------------
+- **Secure Authentication**: Full user management provided by Clerk, including sign-up, sign-in, social logins, and profile management.
+- **Dashboard Overview**: An analytical dashboard with charts (Recharts) and key metrics. Utilizes Next.js Parallel Routes for a better user experience.
+- **Product Management**: A feature module demonstrating CRUD operations with server-side searching, filtering, and pagination for data tables.
+- **Kanban Board**: A drag-and-drop task management interface using `dnd-kit` for interactivity and `zustand` for local state persistence.
+- **User Profile Management**: A dedicated page for users to manage their account details and security settings, powered by Clerk's components.
+- **Centralized Error Handling**: Integrated with Sentry for real-time error tracking, reporting, and session replays.
+
+
+4. Project Structure
+--------------------
+The project follows a feature-based organization to promote modularity and scalability.
+
+```
+src/
+├── app/              # Next.js App Router directory
+│   ├── (auth)/       # Authentication pages (sign-in, sign-up)
+│   ├── (dashboard)/  # Protected dashboard routes
+│   │   ├── dashboard/
+│   │   ├── kanban/
+│   │   ├── product/
+│   │   └── profile/
+│   ├── layout.tsx
+│   └── api/          # API routes
+│
+├── components/       # Reusable components shared across features
+│   ├── ui/           # Shadcn-ui components
+│   └── layout/       # Header, Sidebar, etc.
+│
+├── features/         # Feature-based modules (e.g., product, kanban)
+│   └── feature/
+│       ├── components/ # Components specific to this feature
+│       ├── actions/    # Server actions for the feature
+│       ├── schemas/    # Zod validation schemas
+│       └── utils/      # Utility functions for the feature
+│
+├── lib/              # Core libraries, utilities, and configurations
+│   ├── auth/         # Clerk configuration
+│   ├── db/           # Database connection and utilities (if any)
+│   └── utils.ts      # Shared utility functions
+│
+├── hooks/            # Custom React hooks
+│
+├── stores/           # Zustand global state stores
+│
+└── types/            # Global TypeScript type definitions
+```
+
+
+5. Getting Started
+------------------
+
+5.1. Prerequisites
+- Node.js (v18.17.0 or later recommended)
+- pnpm (or npm/yarn)
+
+5.2. Environment Setup
+Create a `.env.local` file in the project root by copying `env.example.txt`.
+
+`cp env.example.txt .env.local`
+
+You will need to populate this file with your credentials from Clerk and Sentry.
+
+```
+# Clerk Authentication (https://dashboard.clerk.com)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+
+# Sentry Error Tracking (https://sentry.io)
+NEXT_PUBLIC_SENTRY_DSN=https://...
+```
+
+5.3. Installation
+Clone the repository and install the dependencies.
+
+```bash
+git clone https://github.com/rohith200589
+cd next-shadcn-dashboard-starter
+pnpm install
+```
+
+5.4. Running the Application
+Start the development server:
+
+```bash
+pnpm dev
+```
+
+The application will be available at http://localhost:3000.
+
+
+6. Authentication (Clerk)
+-------------------------
+Authentication is handled by Clerk. The configuration is located in `src/lib/auth/` and through environment variables.
+- The `(auth)` route group in `src/app/` contains the sign-in and sign-up pages.
+- The dashboard routes are protected by Clerk's middleware, defined in `src/middleware.ts`.
+- The user profile page at `/dashboard/profile` uses the `<UserProfile />` component from Clerk for a full-featured account management UI.
+
+
+7. Styling (Tailwind CSS & Shadcn/ui)
+-------------------------------------
+The project uses Tailwind CSS v4 for utility-first styling. Components are built using `shadcn/ui`, which provides a set of accessible and customizable components that are copied directly into your project under `src/components/ui`. This allows for full control over their styling and behavior.
+
+
+8. State Management (Zustand)
+-----------------------------
+Zustand is used for minimal and effective global state management. Store definitions are located in the `src/stores/` directory. It is used in features like the Kanban board to persist state locally across component re-renders without prop drilling.
+
+
+9. Forms and Validation (React Hook Form & Zod)
+-----------------------------------------------
+Forms are built using `react-hook-form` for performance and `zod` for schema-based validation. This combination provides a robust, type-safe way to handle form submissions and validation.
+- Form components are typically found within feature directories (e.g., `src/features/product/components/`).
+- Zod schemas are defined in `src/features/product/schemas/`.
+
+
+10. Data Tables (Tanstack Table)
+--------------------------------
+The application uses Tanstack Table to create powerful and flexible data tables. The `/dashboard/product` page is a prime example, featuring:
+- Server-side data fetching.
+- State management for search and pagination via URL search params, handled by `nuqs`.
+- Column filtering and sorting.
+
+
+11. Error Tracking (Sentry)
+---------------------------
+Sentry is integrated for real-time error tracking and performance monitoring. The configuration is managed via the `NEXT_PUBLIC_SENTRY_DSN` environment variable. It automatically captures unhandled exceptions and provides tools for debugging, including session replays. The global error page is configured to report issues to Sentry.
+
+
+12. Deployment
+--------------
+This Next.js application is optimized for deployment on platforms like Vercel, Netlify, or any other provider that supports Node.js.
+
+To deploy on Vercel:
+1. Push your code to a Git repository (GitHub, GitLab, Bitbucket).
+2. Import the project into Vercel.
+3. Add the required environment variables from your `.env.local` file to the Vercel project settings.
+4. Vercel will automatically build and deploy your application.
+
+
+13. Contributing
+----------------
+This project uses Husky for pre-commit hooks to ensure code quality. Before committing, ESLint and Prettier will run to lint and format your code.
+
+If you wish to contribute, please fork the repository and create a pull request.
+
+---
+End of Documentation

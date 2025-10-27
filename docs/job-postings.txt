@@ -1,0 +1,12 @@
+## In job posting backend - Unused API Endpoints
+GET /api/job-posts/user/{email}
+
+What it does: Fetches all job posts that were created by a single, specific user.
+
+Potential Feature: This is perfect for creating a "My Job Postings" page, where a logged-in recruiter could see a filtered list of only the jobs they have personally created, rather than all jobs in the system.
+
+GET /api/saved-preferences
+
+What it does: Fetches all saved job preferences from every user in the system.
+
+Potential Feature: This is an admin-level endpoint. It could be used in an administrator's dashboard to analyze which types of jobs are most frequently saved as templates across the entire company, helping to identify hiring trends.
